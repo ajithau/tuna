@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
 
@@ -15,9 +16,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $taskData = DB::table('tasks')
-                    ->join('users','tasks.userid','=','users.id')
-                    ->select('tasks.*','users.name')->get();
+        $taskData = Task::with('user')->get();
         return view('tasks.index', ['taskData' => $taskData]);
     }
 
@@ -43,7 +42,7 @@ class TaskController extends Controller
     {
         $request->validate([
             'task' => 'required',
-            'userid' => 'required',
+            'user_id' => 'required',
             'hours' => 'required',
         ]);
   
@@ -56,7 +55,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Task  $Task::find($id);task
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -91,7 +90,7 @@ class TaskController extends Controller
     {
         $tasks = Task::find($id);
         $tasks->task = request('task');
-        $tasks->userid = request('userid');
+        $tasks->user_id = request('user_id');
         $tasks->hours = request('hours');
         $tasks->save();
   

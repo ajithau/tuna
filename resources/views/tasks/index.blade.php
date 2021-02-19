@@ -16,7 +16,7 @@
             @foreach ($taskData as $task)
             <tr>
                 <td>{{$task->task}}</td>
-                <td>{{$task->name}}</td>
+                <td>{{$task->user->name}}</td>
                 <td>{{$task->hours}}</td>
                 <td>
                     <a href="{{ route('tasks.edit',$task->id) }}">

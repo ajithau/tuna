@@ -10,12 +10,12 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = DB::table('users')
-        ->join('tasks','users.id','=','tasks.userid')
-        ->get();
-        $data = json_decode(json_encode($users),true);
-        $userdata = $this->group_assoc($data, 'name');
-        return view('users.index',['userdata'=>$userdata]);
+        $users =  DB::table('users')
+                                ->join('tasks','users.id','=','tasks.user_id')
+                                ->select('users.*', DB::raw('group_concat(tasks.task) as task'), DB::raw('SUM(tasks.hours) as hours'))
+                                ->groupBy('users.email')
+                                ->get();
+        return view('users.index',['userdata'=>$users]);
 
     }
     public function group_assoc($array, $key) {
@@ -44,7 +44,7 @@ class UserController extends Controller
 
         $avatarName = $user->id.'_avatar'.time().'.'.request()->avatar->getClientOriginalExtension();
 
-        $request->avatar->storeAs('avatars',$avatarName);
+        $request->avatar->storeAs('public/avatars',$avatarName);
 
         $user->avatar = $avatarName;
         $user->save();

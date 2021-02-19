@@ -37,7 +37,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>User:</strong>
-                        <select  name="userid" >
+                        <select  name="user_id" >
                         @foreach($users as $user)
                             <option  value="{{$user->id}}">{{$user->name}}</option>
                         @endforeach
